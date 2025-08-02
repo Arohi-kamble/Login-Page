@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
-import { Amplify } from 'aws-amplify';
-import amplifyConfig from '../amplifyconfiguration.json'; // adjust path as needed
-Amplify.configure(amplifyConfig);
+// import { Amplify } from 'aws-amplify';
+// import amplifyConfig from '../amplifyconfiguration.json'; // adjust path if needed
 
-
-const client = generateClient(); // Removed Schema typing for plain JS
+// Amplify.configure(amplifyConfig);
+const client = generateClient();
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -26,11 +25,11 @@ export default function Home() {
       if (result.data.length > 0) {
         setIsLoggedIn(true);
       } else {
-        alert('Invalid credentials');
+        setIsLoggedIn(false);
       }
     } catch (err) {
       console.error('Login failed:', err);
-      alert('Login error. Please try again.');
+      setIsLoggedIn(false);
     }
   };
 
