@@ -1,16 +1,32 @@
 import { useState } from 'react';
+import { generateClient } from 'aws-amplify/data';
+
+const client = generateClient(); // Removed Schema typing for plain JS
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === 'test@example.com' && password === '123456') {
-      setIsLoggedIn(true);
-    } else {
-      alert('Invalid credentials');
+
+    try {
+      const result = await client.models.Login.list({
+        filter: {
+          email: { eq: email },
+          password: { eq: password },
+        },
+      });
+
+      if (result.data.length > 0) {
+        setIsLoggedIn(true);
+      } else {
+        alert('Invalid credentials');
+      }
+    } catch (err) {
+      console.error('Login failed:', err);
+      alert('Login error. Please try again.');
     }
   };
 
@@ -51,8 +67,9 @@ export default function Home() {
           <button className="button" onClick={handleLogout}>Logout</button>
         </div>
       )}
+
       <style jsx>{`
-     .container {
+        .container {
           min-height: 100vh;
           display: flex;
           align-items: center;
@@ -66,7 +83,7 @@ export default function Home() {
           background: white;
           padding: 30px;
           border-radius: 10px;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
           width: 100%;
           max-width: 400px;
           color: black;
@@ -114,4 +131,3 @@ export default function Home() {
     </div>
   );
 }
-
