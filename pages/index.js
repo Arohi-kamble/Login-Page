@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
+import { Amplify } from 'aws-amplify';
+import amplifyConfig from '../amplifyconfiguration.json'; // adjust path as needed
+Amplify.configure(amplifyConfig);
+
 
 const client = generateClient(); // Removed Schema typing for plain JS
 
